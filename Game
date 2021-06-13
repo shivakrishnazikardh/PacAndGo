@@ -1,0 +1,165 @@
+import turtle 
+import random
+import time 
+
+lives = 3
+score = 0 
+
+win = turtle.Screen()
+win.tracer(0)
+win.title("PackAndGo")
+win.bgcolor("Black")
+win.setup(700, 700)
+
+pg = turtle.Turtle()
+pg.speed(1)
+pg.penup()
+pg.color("blue")
+pg.shape("circle")
+pg.direction = 'stop'
+
+l = turtle.Turtle()
+l.speed(0)
+l.color('orange')
+l.penup()
+l.goto(0, -300)
+l.pendown()
+l.write('Score: {} Lives: {}'.format(score, lives), align= 'center', font= ('calibre', 20))
+l.hideturtle()
+
+p = turtle.Turtle()
+p.speed(0)
+p.color('orange')
+p.penup()
+p.goto(0, 300)
+p.pendown()
+p.write('PackAndGo', align= 'center', font= ('calibre', 35, 'bold'))
+p.hideturtle()
+
+t = turtle.Turtle()
+t.speed(0)
+t.color('orange')
+t.penup()
+t.goto(250, -300)
+t.pendown()
+t.write('By - R Shiva Krishna ', align= 'center', font= ('calibre', 10, 'bold'))
+t.hideturtle()
+
+es = []
+for i in range(10) :
+    e = turtle.Turtle()
+    e.speed = 0.8
+    e.color('white')
+    e.penup()
+    e.shape('turtle')
+    x = random.randint(-350, -100)
+    y = random.randint(-250, 250)
+    e.setposition(x, y)
+    es.append(e)
+
+def me() :
+    for e in es :
+        x = e.xcor()
+        y = e.ycor()
+        x += e.speed
+        y += e.speed
+        e.setx(x)
+        e.sety(y)
+    
+
+foods = []
+for _ in range(40) :
+    food = turtle.Turtle()
+    food.speed(0)
+    food.penup()
+    food.color('red')
+    food.shape('triangle')
+    food.shapesize(stretch_wid= 0.5, stretch_len= 0.5)
+    x = random.randint(-350, 350)
+    y = random.randint(-250, 250)
+    food.setposition(x, y)
+    foods.append(food)
+    
+def mov() :
+    if pg.direction == 'up' :
+        y = pg.ycor()
+        y += 3.5
+        pg.sety(y)
+    if pg.direction == 'down' :
+        y = pg.ycor()
+        y -= 3.5
+        pg.sety(y)
+    if pg.direction == 'right' :
+        x = pg.xcor()
+        x -= 3.5
+        pg.setx(x)
+    if pg.direction == 'left' :
+        x = pg.xcor()
+        x += 3.5
+        pg.setx(x)
+    
+def mu() :
+    pg.direction = 'up'
+def md() :
+    pg.direction = 'down'
+def mr() :
+    pg.direction = 'right'
+def ml() :
+    pg.direction = 'left'
+    
+win.listen()    
+win.onkeypress(mu, 'Up')
+win.onkeypress(md, 'Down')
+win.onkeypress(mr, 'Left')
+win.onkeypress(ml, 'Right')
+
+
+while True :
+    win.update()
+    
+    if pg.xcor() > 350 or pg.xcor() < -350 or pg.ycor() < -260 or pg.ycor() > 300 :
+        lives -= 1
+        l.clear()
+        l.write('Score: {} Lives: {}'.format(score, lives), align= 'center', font= ('calibre', 20))
+        time.sleep(1)
+        pg.goto(0, 0)
+        pg.direction = 'stop'
+        
+    if lives == 0 :
+        score = 0 
+        lives = 3
+        l.write('Score: {} Lives: {}'.format(score, lives), align= 'center', font= ('calibre', 20))
+        time.sleep(1)
+        pg.goto(0, 0)
+        pg.direction = 'stop'
+        
+    for e in es :    
+        if e.xcor() > 350 or e.xcor() < -350 or e.ycor() < -250 or e.ycor() > 250 :
+            x = random.randint(-350, 350)
+            y = random.randint(-250, 250)
+            e.goto(x, y)
+            me()
+            
+    for e in es :
+        if pg.distance(e) < 10 :
+            lives -= 1
+            l.clear()
+            l.write('Score: {} Lives: {}'.format(score, lives), align= 'center', font= ('calibre', 20))
+            x = random.randint(-350, 349)
+            y = random.randint(-250, 250)
+            
+            pg.goto(0, 0)
+            pg.direction = 'stop'
+
+    
+    for food in foods :
+        if pg.distance(food) < 10 :
+            score += 1
+            l.clear()
+            l.write('Score: {} Lives: {}'.format(score, lives), align= 'center', font= ('calibre', 20))
+            x = random.randint(-350, 350)
+            y = random.randint(-250, 250)
+            food.goto(x, y)
+    
+    mov()
+    me()
